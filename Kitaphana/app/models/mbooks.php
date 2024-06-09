@@ -2,7 +2,6 @@
 
 class Books {
     private $conn;
-
     public $id;
     public $ady;
     public $awtory;
@@ -10,7 +9,9 @@ class Books {
     public $yyly;
     public $surat;
     public $pdf;
-
+    public $tableName="books";
+    public $pdfPath;
+    public $jpgPath;
     public function __construct($db) {
         $this->conn = $db;
     }
@@ -29,16 +30,18 @@ class Books {
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
-    public function create() {
-        $query = "INSERT INTO books SET bookName=:name, bookAuthor=:author, bookCategory=:category,bookYear=:year,bookCoverImagePath:=image,bookPagesImagePath:=page";
+    // Function to insert file paths into MySQL table
+    public function create($pdfPath, $jpgPath, $tableName) {
+        $pdfPath = $conn->real_escape_string($pdfPath);
+        $jpgPath = $conn->real_escape_string($jpgPath);
+        $query = "INSERT INTO $tableName SET bookName=:name, bookAuthor=:author, bookCategory=:category,bookYear=:year,bookCoverImagePath:=image,bookPagesImagePath:=page";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':name', $this->ady);
         $stmt->bindParam(':author', $this->awtory);
         $stmt->bindParam(':category', $this->gornusi);
         $stmt->bindParam(':year', $this->yyly);
-        $stmt->bindParam(':image', $this->surat);
-        $stmt->bindParam(':page', $this->pdf);
+        $stmt->bindParam(':image', $this->jpgPath);
+        $stmt->bindParam(':page', $this->pdfPath);
 
         if ($stmt->execute()) {
             return true;
