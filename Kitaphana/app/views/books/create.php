@@ -26,8 +26,12 @@
         <input type="text" class="form-control form-control-sm " placeholder="Senesi" aria-label="sene"
             name="yyly" required>
     </div>
-    <input type="file" name="pdf" accept="application/pdf">
-    <input type="submit" value="Upload PDF" name="submit">
+        <!-- <label for="image">Select image to upload:</label> -->
+        <input type="file" name="image" id="image">
+        <input type="submit" value="Upload Image" name="submit">
+        <br><br>
+        <input type="file" name="pdf" accept="application/pdf">
+        <input type="submit" value="Upload PDF" name="submit">
 </form>
 </div>
     <!-- <div class="row my-3">

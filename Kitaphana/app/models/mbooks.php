@@ -34,19 +34,31 @@ class Books {
     public function create($pdfPath, $jpgPath, $tableName) {
         $pdfPath = $conn->real_escape_string($pdfPath);
         $jpgPath = $conn->real_escape_string($jpgPath);
-        $query = "INSERT INTO $tableName SET bookName=:name, bookAuthor=:author, bookCategory=:category,bookYear=:year,bookCoverImagePath:=image,bookPagesImagePath:=page";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':name', $this->ady);
-        $stmt->bindParam(':author', $this->awtory);
-        $stmt->bindParam(':category', $this->gornusi);
-        $stmt->bindParam(':year', $this->yyly);
-        $stmt->bindParam(':image', $this->jpgPath);
-        $stmt->bindParam(':page', $this->pdfPath);
+        // Check if $uploadOk is set to 0 by an error
+        if ($uploadOk == 0) {
+            echo "Sorry, your file was not uploaded.";
+        } else {
+            // if everything is ok, try to upload file
+            if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                echo "The file " . basename($_FILES["image"]["name"]) . " has been uploaded.";
 
-        if ($stmt->execute()) {
-            return true;
+                $query = "INSERT INTO $tableName SET bookName=:name, bookAuthor=:author, bookCategory=:category,bookYear=:year,bookCoverImagePath:=image,bookPagesImagePath:=page";
+                $stmt = $this->conn->prepare($query);
+                $stmt->bindParam(':name', $this->ady);
+                $stmt->bindParam(':author', $this->awtory);
+                $stmt->bindParam(':category', $this->gornusi);
+                $stmt->bindParam(':year', $this->yyly);
+                $stmt->bindParam(':image', $this->target_file);
+                $stmt->bindParam(':page', $this->jpgPath);
+        
+                if ($stmt->execute()) {
+                    return true;
+                }
+                return false;
+               
+            }
         }
-        return false;
+        
     }
 
     public function update() {

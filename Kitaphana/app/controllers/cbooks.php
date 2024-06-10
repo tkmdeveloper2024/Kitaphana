@@ -38,6 +38,44 @@ class BookController {
     // Check if form is submitted
     public function create() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Directory where the file will be uploaded
+            $target_dir = "covers/";
+            // Create uploads directory if it doesn't exist
+            if (!is_dir($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+            // Get the file name and its target path
+            $target_file = $target_dir . basename($_FILES["image"]["name"]);
+            $uploadOk = 1;
+            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+            // Check if image file is an actual image or fake image
+            $check = getimagesize($_FILES["image"]["tmp_name"]);
+            if ($check !== false) {
+                echo "File is an image - " . $check["mime"] . ".";
+                $uploadOk = 1;
+            } else {
+                echo "File is not an image.";
+                $uploadOk = 0;
+            }
+
+            // Check if file already exists
+            if (file_exists($target_file)) {
+                echo "Sorry, file already exists.";
+                $uploadOk = 0;
+            }
+
+            // Check file size (limit to 5MB)
+            if ($_FILES["image"]["size"] > 5000000) {
+                echo "Sorry, your file is too large.";
+                $uploadOk = 0;
+            }
+            // Allow certain file formats
+            $allowed_types = array("jpg", "jpeg", "png", "gif");
+            if (!in_array($imageFileType, $allowed_types)) {
+                echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+                $uploadOk = 0;
+            }
             $this->books->ady = $_POST['ady'];
             $this->books->awtory = $_POST['awtory'];
             $this->books->gornusi = $_POST['gornusi'];
